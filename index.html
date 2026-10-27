@@ -4,6 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Метро Новосибирска 2055 — 2D</title>
+<meta name="description" content="Неофициальная интерактивная схема Новосибирского метро: пути, стрелки, съезды и тупики на спутниковом снимке, перспектива линий и станций до 2055 года.">
+<meta name="theme-color" content="#0b0f13">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:site_name" content="Метро Новосибирска 2055">
+<meta property="og:title" content="Метро Новосибирска 2055 — схема путевого развития">
+<meta property="og:description" content="Пути, стрелки, съезды и тупики на спутниковом снимке, перспектива линий и станций до 2055 года. Неофициальная схема по открытым данным.">
+<meta property="og:url" content="https://novosibirsk-metro.github.io/">
+<meta property="og:image" content="https://novosibirsk-metro.github.io/og.png?v=2">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Схема линий Новосибирского метро с перспективой до 2055 года">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* одна полноэкранная карта; панель слева, карточка справа */
@@ -23,6 +38,8 @@ a{color:var(--accent)}
 h1{font-family:var(--f-disp);font-size:24px;line-height:1.05;margin:4px 0 6px}
 h1 b{color:var(--accent);font-weight:700}
 .lead{margin:0;color:var(--muted);font-size:12.5px;line-height:1.4}
+.unoff{margin:6px 0 0;font-size:11.5px;line-height:1.35;color:#c9b27a;border-left:2px solid #6b5a2c;padding-left:8px}
+.cardnote{margin:0;font-size:11.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:8px}
 .scroll{overflow:auto;flex:1}
 .blk{padding:12px 16px;border-bottom:1px solid var(--rule);display:grid;gap:8px}
 h2{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
@@ -65,12 +82,19 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 #hud{position:absolute;left:324px;bottom:12px;display:flex;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:11px;color:var(--muted);pointer-events:none}
 #hud span{background:var(--panel);border:1px solid var(--rule);padding:5px 9px;border-radius:6px}
 #panelToggle{display:none}
+#hud i{font-style:normal}#hud .s{display:none}
 @media (max-width:760px){
   #panel{width:auto;right:12px;bottom:auto;max-height:70%}
+  #panel header{padding:10px 12px;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px}
+  #panel header .eyebrow,#panel header .lead{display:none}
+  #panel h1{font-size:19px;margin:0;grid-column:1}
+  #panel header .row{grid-column:2;grid-row:1;margin:0!important}
+  .unoff{grid-column:1/-1;font-size:10.5px;margin-top:6px}
+  #hud .l{display:none}#hud .s{display:inline}
   #panel.closed .scroll{display:none}
   #panelToggle{display:inline-block}
   #hud{left:12px;right:60px}
-  #card{top:auto;bottom:12px;max-height:55%}
+  #card{top:auto;bottom:12px;max-height:55%;z-index:6;background:var(--panel-solid)}
 }
 </style>
 </head>
@@ -81,6 +105,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     <div class="eyebrow">Путевое развитие · 2D</div>
     <h1>Метро Новосибирска <b>2055</b></h1>
     <p class="lead">Оба главных пути, съезды, тупики и стрелки по OpenStreetMap. Пунктир — проектируемые участки: нажмите, чтобы открыть статус.</p>
+    <p class="unoff">Неофициальная любительская схема по открытым данным на октябрь 2026 г. Не связана с ГУП «Новосибирский метрополитен».</p>
     <div class="row" style="margin-top:8px"><button class="btn" id="panelToggle" type="button">Панель</button></div>
   </header>
   <div class="scroll">
@@ -113,6 +138,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
       <div class="lg">
         <div><i style="--c:#e2322f"></i>Ленинская линия</div>
         <div><i style="--c:#22a653"></i>Дзержинская линия</div>
+        <div><i class="d" style="--c:#2f7be0"></i>Правобережная линия (проект)</div>
         <div><i style="--c:#d99a6c"></i>Однопутный участок (движение в обе стороны)</div>
         <div><i class="d" style="--c:#cfd6dc"></i>Недостроенный тоннель</div>
         <div><i class="d" style="--c:#22a653"></i>Проектируемый участок</div>
@@ -127,7 +153,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 </aside>
 <div id="card" hidden><button class="x" type="button" id="cardX" aria-label="Закрыть">×</button><div id="cardBody"></div></div>
 <div id="zoom"><button class="btn" id="zIn" type="button" aria-label="Приблизить">+</button><button class="btn" id="zOut" type="button" aria-label="Отдалить">−</button></div>
-<div id="hud"><span id="hudScale"></span><span id="hudSrc">Снимки: Esri World Imagery, Maxar, Earthstar Geographics · пути: © участники OpenStreetMap</span></div>
+<div id="hud"><span id="hudScale"></span><span id="hudSrc"><i class="l">Снимки: Esri World Imagery, Maxar, Earthstar Geographics · пути: © участники OpenStreetMap</i><i class="s">© Esri, Maxar · © OpenStreetMap</i></span></div>
 
 <script src="nsk-osm.js" charset="utf-8"></script>
 <script>
@@ -197,6 +223,24 @@ const FUT={
     facts:['По словам главы города, Кировская линия находится в резерве генплана.','Трасса и названия станций в модели — концепция для горизонта 2055 года, а не утверждённый проект.'],
     src:['fp24','gen']}
 };
+
+/* ---------------- генеральная схема метро до 2055 г. (проект изменений Генплана, 10.2026) ---------------- */
+// трассы и станции, снятые со схемы мэрии и привязанные к карте (см. README); ед. = 10 м
+var GP={"l1n": {"pts": [[-51.9, -479.7], [-65.3, -582.4], [-73.1, -686.8], [-57.0, -745.5], [-35.5, -800.7], [-6.6, -854.0], [36.4, -957.0], [77.7, -1049.0], [95.7, -1084.0], [144.4, -1159.6], [207.7, -1198.7], [271.0, -1243.3], [352.6, -1264.2], [443.3, -1268.8], [497.8, -1254.7], [514.2, -1229.2]], "st": [{"n": "Северная", "no": "9.? (ТПУ «Северная»)", "i": 1}, {"n": "Авиационная", "no": "9.16", "i": 3}, {"n": "Космическая", "no": "9.17", "i": 5}, {"n": "Родники", "no": "9.18", "i": 8}, {"n": "Песчаная", "no": "9.19", "i": 10}, {"n": "Клюквенная", "no": "9.20", "i": 15}], "depot": null}, "l1w": {"pts": [[-221.5, 418.4], [-297.0, 417.9], [-405.8, 429.6], [-482.8, 439.3], [-554.1, 450.2], [-645.3, 440.9], [-691.0, 410.6], [-747.4, 402.2], [-811.0, 397.6], [-842.0, 374.2], [-854.9, 321.2], [-855.0, 291.9], [-860.6, 264.5], [-893.3, 254.0], [-984.1, 255.0], [-1103.7, 267.5], [-1197.9, 279.8], [-1310.1, 290.7], [-1433.1, 289.1], [-1480.1, 284.4], [-1536.6, 255.4], [-1574.2, 204.4], [-1595.2, 155.6]], "st": [{"n": "Площадь Станиславского", "no": "пересадка на Дзержинскую", "i": 1}, {"n": "Троллейная", "no": "ТПУ «Троллейная»", "i": 2}, {"n": "Связистов", "no": "", "i": 4}, {"n": "Чистая Слобода", "no": "9.2", "i": 6}, {"n": "Западная", "no": "9.3", "i": 10}, {"n": "Экспоцентр", "no": "9.4", "i": 15}, {"n": "Город Обь", "no": "9.5", "i": 18}, {"n": "Аэропорт Толмачёво", "no": "9.6", "i": 22}], "depot": {"n": "Объект 68.1 (электродепо по условному знаку)", "route": [[-1123.6, 287.9]]}}, "l2w": {"pts": [[-150.0, -138.6], [-181.5, -89.1], [-206.1, -62.5], [-239.7, -9.8], [-252.6, 42.2], [-284.7, 106.8], [-318.6, 145.2], [-323.0, 208.3], [-319.3, 297.2], [-314.0, 386.0], [-309.8, 436.7], [-302.5, 495.4], [-297.2, 545.6], [-292.1, 597.9], [-268.5, 621.7], [-217.5, 622.8], [-112.5, 622.5], [9.7, 633.1], [96.2, 664.7], [163.1, 710.3], [228.6, 788.5], [286.8, 864.9], [325.1, 912.2], [332.6, 981.7], [332.9, 1055.0], [331.3, 1111.8], [327.9, 1166.8], [308.1, 1199.9]], "st": [{"n": "Аквапарк", "no": "9.7", "i": 3}, {"n": "Затон", "no": "9.8", "i": 5}, {"n": "Площадь Труда", "no": "9.9", "i": 8}, {"n": "Площадь Станиславского", "no": "9.10", "i": 10}, {"n": "Юго-Западная", "no": "9.11", "i": 12}, {"n": "Гвардейская", "no": "9.12", "i": 16}, {"n": "Бугринская", "no": "9.13", "i": 18}, {"n": "Лесопарковая", "no": "9.14", "i": 21}, {"n": "Краснообск", "no": "9.15", "i": 25}], "depot": {"n": "Объект 68.2 (электродепо по условному знаку)", "route": [[282.7, 1209.4]]}}, "l3": {"pts": [[-111.8, -1224.7], [-108.0, -1190.0], [-42.5, -1143.0], [37.7, -1076.1], [72.3, -1043.4], [92.3, -1047.3], [128.8, -1001.9], [172.5, -969.4], [208.9, -956.9], [218.2, -913.0], [222.2, -860.0], [222.7, -775.7], [232.4, -689.7], [249.2, -640.4], [291.8, -574.8], [332.4, -534.9], [376.6, -484.0], [395.1, -454.9], [386.5, -431.0], [367.1, -416.0], [297.6, -334.1], [250.7, -292.5], [225.9, -267.9], [217.5, -233.2], [166.1, -153.2], [129.4, -110.4], [111.6, -84.4], [83.9, -47.6], [94.7, -17.0], [120.6, 0.9], [156.5, 30.0], [195.3, 63.1], [211.4, 85.1], [246.0, 116.0], [291.8, 144.8], [348.5, 158.6], [416.1, 124.5], [452.6, 114.7], [488.9, 136.2], [521.6, 154.1], [556.1, 188.5], [583.4, 226.7], [612.6, 257.5], [630.9, 301.3], [629.2, 349.0], [627.6, 393.0], [587.9, 442.9]], "st": [{"n": "Петрозаводская", "no": "9.21 (ТПУ «Стрижи»)", "i": 0}, {"n": "Родники", "no": "9.22", "i": 5}, {"n": "Снегири", "no": "9.23", "i": 8}, {"n": "Юбилейная", "no": "9.24", "i": 10}, {"n": "Учительская", "no": "9.25", "i": 13}, {"n": "Восточная", "no": "9.26", "i": 15}, {"n": "Чкаловская", "no": "9.27", "i": 19}, {"n": "Берёзовая роща", "no": "9.28", "i": 22}, {"n": "Каменская", "no": "9.29", "i": 26}, {"n": "Октябрьская", "no": "9.30", "i": 29}, {"n": "Никитинская", "no": "9.31", "i": 32}, {"n": "Дунайская", "no": "9.32", "i": 34}, {"n": "Плющихинская", "no": "9.33", "i": 38}, {"n": "Выборная", "no": "9.34", "i": 41}, {"n": "Камышенская", "no": "9.35", "i": 44}, {"n": "Карьерная", "no": "9.36", "i": 46}], "depot": {"n": "Электродепо на Ключ-Камышенском плато (объект 60)", "route": [[583.4, 226.7], [623.5, 261.0], [667.1, 275.1], [775.9, 273.9], [810.3, 247.8]]}}};
+LINES.L3={name:'Правобережная',num:'3',color:0x2f7be0,css:'#2f7be0'};
+SRC.gp55={t:'Мэрия Новосибирска показала, каким хочет видеть метро к 2055 году (Царьград, 27.10.2026)',u:'https://nsk.tsargrad.tv/news/mjerija-novosibirska-pokazala-kakim-hochet-videt-metro-k-2055-godu_1923927'};
+SRC.ngs55={t:'Мэрия анонсировала планы по строительству новых станций метро (НГС, 26.10.2026)',u:'https://ngs.ru/text/transport/2026/10/26/76723898/'};
+var GPNOTE='Схема вошла в проект изменений Генерального плана, вынесенный на публичные слушания (22.10–20.11.2026); сроки и финансирование не определены. Положение станций снято со схемы мэрии, точность около 100–300 м.';
+FUT.l1n={title:'Ленинская линия на север: до Клюквенного',line:'L1',year:2055,stage:1,ll:[55.1298,83.0033],
+  facts:['Станции по схеме: «Северная», «Авиационная», «Космическая», «Родники» (пересадка на Правобережную линию), «Песчаная», «Клюквенная».','В Клюквенном — транспортно-пересадочный узел: метро, трамвай и городская электричка.',GPNOTE],src:['gp55','ngs55']};
+FUT.l1w={title:'Ленинская линия на запад: до аэропорта Толмачёво',line:'L1',year:2055,stage:1,ll:[55.0096,82.6529],
+  facts:['Станции по схеме: «Площадь Станиславского» (пересадка на Дзержинскую), «Троллейная», «Связистов», «Чистая Слобода», «Западная», «Экспоцентр», «Город Обь», «Аэропорт Толмачёво».','Продолжает оборотные тупики «Площади Маркса».',GPNOTE],src:['gp55','ngs55']};
+FUT.l2w={title:'Дзержинская линия на левый берег: до Краснообска',line:'L2',year:2055,stage:1,ll:[54.9196,82.9747],
+  facts:['От «Площади Гарина-Михайловского» через Обь к Лесоперевалке, далее через проезд Энергетиков, улицы Станиславского, Мира и Ватутина до Краснообска.','Станции по схеме: «Аквапарк», «Затон», «Площадь Труда», «Площадь Станиславского» (пересадка на Ленинскую), «Юго-Западная», «Гвардейская», «Бугринская», «Лесопарковая», «Краснообск»; за Краснообском — объект 68.2 (по условному знаку — электродепо).','Трасса обходит площадь Маркса; заделы советского времени у «Площади Маркса» в этом варианте не используются. Затулинского направления в схеме больше нет.',GPNOTE],src:['gp55','ngs55']};
+FUT.l3={title:'Правобережная (третья) линия',line:'L3',year:2055,stage:1,ll:[55.0440,82.9557],
+  facts:['От «Стрижей» через Калининский и Дзержинский районы до улицы Выборной и Ключ-Камышенского плато.','Станции по схеме: «Петрозаводская», «Родники», «Снегири», «Юбилейная», «Учительская», «Восточная», «Чкаловская», «Берёзовая роща» (пересадка на Дзержинскую), «Каменская», «Октябрьская» (пересадка на Ленинскую), «Никитинская», «Дунайская», «Плющихинская», «Выборная», «Камышенская», «Карьерная».','Электродепо — на Ключ-Камышенском плато, ветка от «Выборной».',GPNOTE],src:['gp55','ngs55']};
+FUT.molod.facts=['По схеме до 2055 г. Дзержинскую линию до «Молодёжной» предлагают построить полностью под землёй; раньше часть пути вдоль Гусинобродского шоссе планировали на эстакаде.','Далее — электродепо «Волочаевское» южнее станции.'];
+FUT.molod.src=['gp55','tm','tender','n79'];
 
 /* ---------------- подготовка данных ---------------- */
 var LKEY={1:'L1',2:'L2'};
@@ -271,31 +315,40 @@ function buildLine(c){
   c.stations.forEach(function(st){var s=st.s,q=at(p,S,s),pl=[];
     if(st.side){[1,-1].forEach(function(k){add({k:'plat',p:[off(at(p,S,s-5.2),k*(TR+0.25)),off(at(p,S,s+5.2),k*(TR+0.25)),off(at(p,S,s+5.2),k*(TR+0.95)),off(at(p,S,s-5.2),k*(TR+0.95))]},s);});}
     else add({k:'plat',p:[off(at(p,S,s-5.2),TR-0.25),off(at(p,S,s+5.2),TR-0.25),off(at(p,S,s+5.2),-TR+0.25),off(at(p,S,s-5.2),-TR+0.25)]},s);
-    FST.push({n:st.n,line:c.line,plan:st.plan,fut:st.fut,x:q.x,z:q.z});});
+    if(!st.skip)FST.push({n:st.n,line:c.line,plan:st.plan,fut:st.fut,x:q.x,z:q.z,grp:st.grp||c.line+'e',ord:st.ord||0,no:st.no});});
 }
+var FDEP=[];// депо новых линий по схеме Генплана
 (function(){
-  // Дзержинская: «Золотая Нива» → «Гусинобродская» → эстакада 745 м → «Молодёжная» → депо «Волочаевское».
+  // Дзержинская: «Золотая Нива» → «Гусинобродская» → «Молодёжная» → депо «Волочаевское» (по схеме 2055 — под землёй).
   // У «Гусинобродской» по плану-схеме — комплекс 570 м с перекрёстным съездом и тупиками отстоя; по trackmap
   // в боковых тупиковых тоннелях будет ПТО. Наличие — из источников, сторона и стрелки — примерно.
   var m=xw('Молодежная');if(m){var cp=m.p.concat(VOL.conn.slice(1)),S=cum(cp),g=P(55.0362,83.0004),sG=projS(cp,S,g.x,g.z),sM=cum(m.p).pop()-6;
     buildLine({line:'L2',center:cp,joinR:16,years:[[sG+45,2030],[1e9,2032]],futs:[[sG+45,'gusin'],[sM+10,'molod'],[1e9,'voloch']],
       scissors:[[sG+8,false,'Перекрёстный съезд (место примерно)']],sides:[[sG+18,sG+44,'Тупики отстоя с ПТО в боковых тоннелях (место примерно)',false]],
       stations:[{n:'Гусинобродская',s:sG,plan:2030,fut:'gusin'},{n:'Молодёжная',s:sM,plan:2032,fut:'molod',side:true}]});}
-  // Ленинская на север: «Северная»; путевое развитие в источниках нет — типовая схема конечной
-  var n=xw('Северная');if(n){var np=ext(n.p,0,18),Ln=cum(n.p).pop();
-    buildLine({line:'L1',center:np,years:[[1e9,2045]],futs:[[1e9,'l1n']],scissors:[[Ln-24,true]],tailEnd:12,tailAs:true,
-      stations:[{n:'Северная',s:Ln-6,plan:2045,fut:'l1n'}]});}
-  // Ленинская на запад: «Площадь Станиславского» → «Троллейная»; у конечной — типовая схема
-  var t=xw('Троллейная');if(t){var tp=ext(t.p,0,18),St=cum(tp),Lt=cum(t.p).pop(),sS=0;for(var i=1;i<tp.length;i++){if((tp[i-1].x+287)*(tp[i].x+287)<=0){var f=(tp[i-1].x+287)/(tp[i-1].x-tp[i].x);sS=St[i-1]+(St[i]-St[i-1])*f;break;}}
-    buildLine({line:'L1',center:tp,years:[[sS+8,2035],[1e9,2040]],futs:[[1e9,'l1w']],scissors:[[Lt-24,true]],tailEnd:12,tailAs:true,
-      stations:[{n:'Площадь Станиславского',s:sS,plan:2035,fut:'l1w'},{n:'Троллейная',s:Lt-6,plan:2040,fut:'l1w'}]});}
-  // Кировская (концепция): конечные с оборотными тупиками и съездами
-  var K=[[54.9815,82.8965],[54.9700,82.9000],[54.9600,82.9070],[54.9480,82.9150]].map(function(a){return P(a[0],a[1]);});
-  var kp=[];for(var i=1;i<K.length;i++){var a=K[i-1],b=K[i],l=Math.hypot(b.x-a.x,b.z-a.z);for(var s=0;s<l;s+=2)kp.push({x:a.x+(b.x-a.x)*s/l,z:a.z+(b.z-a.z)*s/l});}kp.push(K[K.length-1]);
-  kp=ext(kp,18,18);var Sk=cum(kp),sk=K.map(function(q){return projS(kp,Sk,q.x,q.z);}),Lk=Sk[Sk.length-1];
-  buildLine({line:'L3',center:kp,years:[[sk[0]+6,2050],[sk[1]+6,2052],[sk[2]+6,2054],[1e9,2055]],futs:[[1e9,'l3']],
-    scissors:[[sk[0]+7,true],[sk[3]-15,true]],tailStart:12,tailEnd:12,tailAs:true,
-    stations:['Площадь Маркса (Кировская)','Сибиряков-Гвардейцев','Улица Зорге','Улица Петухова'].map(function(nm,i){return {n:nm,s:sk[i],plan:[2050,2052,2054,2055][i],fut:'l3'};})});
+  // Генеральная схема до 2055 г. (проект изменений Генплана, мэрия Новосибирска, 10.2026).
+  // Трассы и станции сняты со схемы и привязаны к карте по существующим станциям (GP); точность ~100–300 м.
+  // Путевое развитие на этих линиях в схеме не показано: съезды и тупики у конечных — условные.
+  var G=function(k){return GP[k].pts.map(function(q){return {x:q[0],z:q[1]};});};
+  var chaikin=function(p,n){for(var k=0;k<n;k++){var r=[p[0]];for(var i=0;i<p.length-1;i++){var a=p[i],b=p[i+1];r.push({x:.75*a.x+.25*b.x,z:.75*a.z+.25*b.z},{x:.25*a.x+.75*b.x,z:.25*a.z+.75*b.z});}r.push(p[p.length-1]);p=r;}return p;};
+  var dens=function(p){var r=[p[0]];for(var i=1;i<p.length;i++){var a=p[i-1],b=p[i],l=Math.hypot(b.x-a.x,b.z-a.z),n=Math.max(1,Math.round(l/3));for(var j=1;j<=n;j++)r.push({x:a.x+(b.x-a.x)*j/n,z:a.z+(b.z-a.z)*j/n});}return r;};
+  var EXIST={};STN.forEach(function(s){EXIST[s.n]=true;});
+  var gpLine=function(k,line,head,o){o=o||{};var cp=dens(chaikin((head||[]).concat(G(k)),2));
+    if(o.tailStart)cp=ext(cp,o.tailStart,0);if(o.tailEnd)cp=ext(cp,0,o.tailEnd);cp=dens(cp);var S=cum(cp),L=S[S.length-1];
+    var st=GP[k].st.map(function(s,i){var q=GP[k].pts[s.i];return {n:s.n,no:s.no,s:projS(cp,S,q[0],q[1]),plan:2055,fut:k,grp:k,ord:i,skip:EXIST[s.n]};});
+    var sc=[];if(o.tailStart)sc.push([st[0].s+7,true]);if(o.tailEnd)sc.push([st[st.length-1].s-14,true]);
+    buildLine({line:line,center:cp,joinR:o.joinR||8,years:[[1e9,2055]],futs:[[1e9,k]],scissors:sc,tailStart:o.tailStart,tailEnd:o.tailEnd,tailAs:true,stations:st});
+    if(GP[k].depot)FDEP.push({n:GP[k].depot.n,line:line,fut:k,route:GP[k].depot.route.map(function(q){return {x:q[0],z:q[1]};})});};
+  // Ленинская на север: «Северная» — «Авиационная» — «Космическая» — «Родники» — «Песчаная» — «Клюквенная»
+  var n=xw('Северная');gpLine('l1n','L1',n?[n.p[0]]:[],{tailEnd:12});
+  // Ленинская на запад: «Площадь Станиславского» … «Экспоцентр» — «Город Обь» — «Аэропорт Толмачёво»
+  var t=xw('Троллейная');gpLine('l1w','L1',t?[t.p[0]]:[],{tailEnd:12});
+  // Дзержинская на левый берег: от тупиков «Площади Гарина-Михайловского» через Обь до Краснообска
+  var gm=STN.filter(function(s){return s.key.indexOf('Гарина')>=0;})[0],ge=FREE.filter(function(q){return gm&&Math.hypot(q.x-gm.x,q.z-gm.z)<30;});
+  var gh=ge.length?[{x:ge.reduce(function(a,q){return a+q.x;},0)/ge.length,z:ge.reduce(function(a,q){return a+q.z;},0)/ge.length}]:[];
+  gpLine('l2w','L2',gh,{joinR:12,tailEnd:12});
+  // Правобережная (третья) линия: «Петрозаводская» — … — «Карьерная», депо на Ключ-Камышенском плато
+  gpLine('l3','L3',[],{tailStart:12,tailEnd:12});
 })();
 // центр депо «Ельцовское»
 var DEP1=(function(){var xs=[],zs=[];WAYS.forEach(function(w){if(w.ty==='Y')w.p.forEach(function(q){xs.push(q.x);zs.push(q.z);});});
@@ -329,12 +382,22 @@ var LAYERS={tracks:['Пути',true],service:['Съезды, тупики',true]
 var on={};Object.keys(LAYERS).forEach(function(k){on[k]=LAYERS[k][1];});
 var sx=function(x){return (x-view.x)*view.s+Wd/2;},sz=function(z){return (z-view.z)*view.s+Hd/2;};
 var wx=function(px){return (px-Wd/2)/view.s+view.x;},wz=function(py){return (py-Hd/2)/view.s+view.z;};
-function resize(){dpr=Math.min(window.devicePixelRatio||1,2);Wd=cv.clientWidth;Hd=cv.clientHeight;cv.width=Math.round(Wd*dpr);cv.height=Math.round(Hd*dpr);draw();}
+// общий вид: весь город с перспективой — от Толмачёво до Клюквенного и Краснообска
+function homeView(){var w=Wd-panelOff()*2-40,h=Hd-60;var x0=-1760,x1=720,z0=-1290,z1=1150;
+  return {x:(x0+x1)/2,z:(z0+z1)/2,s:Math.max(0.05,Math.min(w/(x1-x0),h/(z1-z0)))};}
+function resize(){dpr=Math.min(window.devicePixelRatio||1,2);Wd=cv.clientWidth;Hd=cv.clientHeight;cv.width=Math.round(Wd*dpr);cv.height=Math.round(Hd*dpr);
+  // вкладка, открытая в фоне, стартует с нулевым размером окна — тогда стартовый вид задаётся при первом настоящем размере
+  if(Wd>0&&Hd>0&&!(view.s>=0.05)){var h=homeView();view.x=h.x;view.z=h.z;view.s=h.s;view.x-=panelOff()/view.s;}
+  draw();}
 
 function path(p){g.beginPath();for(var i=0;i<p.length;i++){var X=sx(p[i].x),Z=sz(p[i].z);i?g.lineTo(X,Z):g.moveTo(X,Z);}}
 function stroke(p,col,w,dash){path(p);g.strokeStyle=col;g.lineWidth=w;g.setLineDash(dash||[]);g.stroke();g.setLineDash([]);}
+var LBL=[];
 function label(t,x,z,o){o=o||{};g.font=(o.w||600)+' '+(o.size||12)+'px '+(o.mono?'"JetBrains Mono",Consolas,monospace':'"Golos Text","Segoe UI",Arial,sans-serif');
   var X=sx(x)+(o.dx||0),Z=sz(z)+(o.dz||0),tw=g.measureText(t).width;g.textBaseline='middle';g.textAlign='left';
+  // подписи станций не накладываются: перекрывающая пропускается и появится при приближении
+  if(o.avoid){var h=(o.size||12)+8,r={a:X-4,b:Z-h/2,c:X+tw+4,d:Z+h/2};
+    for(var i=0;i<LBL.length;i++){var q=LBL[i];if(r.a<q.c&&r.c>q.a&&r.b<q.d&&r.d>q.b)return;}LBL.push(r);}
   if(o.box!==false){g.fillStyle='rgba(11,15,19,.82)';g.fillRect(X-4,Z-(o.size||12)/2-4,tw+8,(o.size||12)+8);if(o.edge){g.fillStyle=o.edge;g.fillRect(X-4,Z-(o.size||12)/2-4,3,(o.size||12)+8);}}
   g.fillStyle=o.col||'#e6ebef';g.fillText(t,X+(o.edge?2:0),Z);}
 var lineCol=function(k){return LINES[k]?LINES[k].css:'#9aa4ae';};
@@ -387,6 +450,12 @@ function drawFuture(){
     var w=e.main?(two?lw*0.75:lw):lw*0.5;stroke(e.p,'rgba(11,15,19,.85)',w+2.5);
     stroke(e.p,e.main?lineCol(e.line):e.as?'#6f7a84':'#9aa4ae',w,e.as?[2,3]:dash);});
   if(view.s>3&&on.stations)FEL.forEach(function(e){if(e.k!=='plat'||e.year>Y)return;path(e.p);g.closePath();g.fillStyle='rgba(230,235,239,.55)';g.fill();g.strokeStyle='rgba(230,235,239,.9)';g.lineWidth=1;g.setLineDash([3,2]);g.stroke();g.setLineDash([]);});
+  // депо новых линий по схеме Генплана: площадка условная (28×14 ед.), точка — по условному знаку на схеме
+  if(on.depots)FDEP.forEach(function(d){var e=d.route[d.route.length-1],c=lineCol(d.line);
+    if(d.route.length>1)stroke(d.route,'#9aa4ae',Math.max(1.2,lw*0.45),[5,4]);
+    d.rect=[{x:e.x-14,z:e.z-7},{x:e.x+14,z:e.z-7},{x:e.x+14,z:e.z+7},{x:e.x-14,z:e.z+7}];
+    path(d.rect);g.closePath();g.fillStyle='rgba(154,164,174,.16)';g.fill();g.strokeStyle=c;g.lineWidth=1.6;g.setLineDash([6,4]);g.stroke();g.setLineDash([]);
+    if(view.s>0.8&&on.labels)label(d.n,e.x,e.z,{dx:-60,dz:-(7*view.s+14),size:10,w:500,col:'#cfd6dc'});});
   if(Y>=2032&&on.depots){
     path(VOL.poly);g.closePath();g.fillStyle='rgba(34,166,83,.16)';g.fill();g.strokeStyle='#22a653';g.lineWidth=2;g.setLineDash([7,5]);g.stroke();g.setLineDash([]);
     path(VOL.shed);g.closePath();g.fillStyle='rgba(34,166,83,.22)';g.fill();g.strokeStyle='rgba(34,166,83,.9)';g.lineWidth=1.2;g.stroke();
@@ -416,11 +485,11 @@ function drawStations(){
   if(on.future)FST.forEach(function(f){if(f.plan>Y)return;var X=sx(f.x),Z=sz(f.z);g.beginPath();g.arc(X,Z,R,0,7);g.fillStyle='#ffffff';g.fill();g.lineWidth=R*0.55;g.strokeStyle=lineCol(f.line);g.stroke();});
 }
 function drawLabels(){
-  if(!on.labels)return;var big=view.s>0.4;
-  if(on.stations)STN.forEach(function(s){label(s.n,s.x,s.z,{dx:12,size:big?12:10,edge:lineCol(s.line)});});
-  if(on.future&&on.stations)FST.forEach(function(f){if(f.plan>Y)return;label(f.n,f.x,f.z,{dx:12,size:big?12:10,edge:lineCol(f.line)});});
+  if(!on.labels)return;var big=view.s>(Wd<500?0.9:0.4);LBL=[];
+  if(on.stations)STN.forEach(function(s){label(s.n,s.x,s.z,{dx:12,size:big?12:10,edge:lineCol(s.line),avoid:true});});
+  if(on.future&&on.stations)FST.forEach(function(f){if(f.plan>Y)return;label(f.n,f.x,f.z,{dx:12,size:big?12:10,edge:lineCol(f.line),avoid:true});});
   if(on.future&&on.service&&view.s>3.5)FEL.forEach(function(e){if(e.k!=='tag'||e.year>Y)return;label(e.t,e.q.x,e.q.z,{dx:-30,dz:-14,size:10,w:500,col:e.as?'#8f9aa4':'#cfd6dc'});});
-  if(on.depots){label('Электродепо ТЧ-1 «Ельцовское»',DEP1.x,DEP1.z,{dz:-16,size:11,col:'#cfd6dc'});
+  if(on.depots&&view.s>1){label('Электродепо ТЧ-1 «Ельцовское»',DEP1.x,DEP1.z,{dz:-16,size:11,col:'#cfd6dc'});
     if(on.future&&Y>=2032)label('Депо ТЧ-2 «Волочаевское» · ≈2032',VOL.center.x,VOL.center.z,{dx:-90,size:11,col:'#7ee0a0'});}
   if(view.s>1.6){var o=WAYS.filter(function(w){return w.o;})[0],u=WAYS.filter(function(w){return w.u;})[0];
     if(o){var a=o.p[o.p.length>>1];label('Один действующий северный тоннель — 482 м',a.x,a.z,{dz:-18,size:11,col:'#d99a6c'});}
@@ -437,7 +506,7 @@ function render(){
 /* ---------------- карточки ---------------- */
 var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});};
 var chip=function(k){return k&&LINES[k]?'<span class="chip" style="background:'+LINES[k].css+'">'+LINES[k].num+'</span>':'';};
-function show(html){$('#cardBody').innerHTML=html;$('#card').hidden=false;}
+function show(html){$('#cardBody').innerHTML=html+'<p class="cardnote">Неофициальная схема по открытым данным на '+TODAY+'. Не является информацией метрополитена.</p>';$('#card').hidden=false;}
 function openStation(s){var m=s.m,L=LINES[s.line];
   show('<div class="eyebrow">'+chip(s.line)+' '+(L?L.name+' линия':'')+'</div><h3>'+esc(s.n)+'</h3><dl class="kv">'+
     (m.open?'<dt>Открыта</dt><dd>'+esc(m.open)+'</dd>':'')+(m.pk?'<dt>Пикет</dt><dd>'+esc(m.pk)+'</dd>':'')+
@@ -465,6 +534,8 @@ function pick(px,py){var x=wx(px),z=wz(py),tol=10/view.s,best=null,bd=tol;
     if(on.future)FST.forEach(function(f){if(f.plan>Y)return;var d=Math.hypot(f.x-x,f.z-z);if(d<bd){bd=d;best=function(){openFuture(f.fut);};}});}
   if(best)return best();
   if(on.future&&on.depots&&Y>=2032&&inPoly(x,z,VOL.poly))return openFuture('voloch');
+  if(on.future&&on.depots)for(var di=0;di<FDEP.length;di++){var d=FDEP[di];if(d.rect&&inPoly(x,z,d.rect))
+    return show('<div class="eyebrow">'+chip(d.line)+' Перспектива · схема до 2055 г.</div><h3>'+esc(d.n)+'</h3><p class="desc">Место отмечено на схеме развития метро в проекте изменений Генплана (10.2026). Размер площадки на карте условный.</p><p class="desc"><a href="#" id="dpL">Линия: '+esc(FUT[d.fut].title)+'</a></p>'),$('#dpL').onclick=function(ev){ev.preventDefault();openFuture(d.fut);};}
   var bw=null;bd=6/view.s;
   WAYS.forEach(function(w){if(w.ty==='X')return;for(var i=1;i<w.p.length;i++){var d=segDist(x,z,w.p[i-1],w.p[i]);if(d<bd){bd=d;bw=w;}}});
   var bf=null;if(on.future)FEL.forEach(function(e){if(e.k!=='track'||e.year>Y)return;for(var i=1;i<e.p.length;i++){var d=segDist(x,z,e.p[i-1],e.p[i]);if(d<bd){bd=d;bf=e;}}});
@@ -485,14 +556,14 @@ cv.addEventListener('pointermove',function(e){if(!pointers[e.pointerId])return;p
 var up=function(e){var r=cv.getBoundingClientRect();if(!moved&&Object.keys(pointers).length===1)pick(e.clientX-r.left,e.clientY-r.top);
   delete pointers[e.pointerId];if(Object.keys(pointers).length<2)pinch=null;dragFrom=null;cv.classList.remove('drag');};
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',function(e){delete pointers[e.pointerId];pinch=null;dragFrom=null;cv.classList.remove('drag');});
-function zoomAt(px,py,k){var x=wx(px),z=wz(py);view.s=Math.max(0.12,Math.min(60,view.s*k));view.x=x-(px-Wd/2)/view.s;view.z=z-(py-Hd/2)/view.s;draw();}
+function zoomAt(px,py,k){var x=wx(px),z=wz(py);view.s=Math.max(0.05,Math.min(60,view.s*k));view.x=x-(px-Wd/2)/view.s;view.z=z-(py-Hd/2)/view.s;draw();}
 cv.addEventListener('wheel',function(e){e.preventDefault();var r=cv.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,Math.exp(-e.deltaY*0.0015));},{passive:false});
 $('#zIn').onclick=function(){zoomAt(Wd/2,Hd/2,1.6);};$('#zOut').onclick=function(){zoomAt(Wd/2,Hd/2,1/1.6);};
 var anim=null;
 var panelOff=function(){return window.innerWidth>760?162:0;};// панель закрывает левую часть карты
 function goTo(x,z,s,card){x-=(panelOff()-(card&&window.innerWidth>760?196:0))/s;var a={x:view.x,z:view.z,s:view.s},t0=performance.now();anim=function(now){var t=Math.min(1,(now-t0)/700),k=1-Math.pow(1-t,3);
   view.x=a.x+(x-a.x)*k;view.z=a.z+(z-a.z)*k;view.s=Math.exp(Math.log(a.s)+(Math.log(s)-Math.log(a.s))*k);render();if(t<1)requestAnimationFrame(anim);};requestAnimationFrame(anim);}
-$('#vAll').onclick=function(){goTo(180,-20,Math.min(Wd,Hd)/1400);};
+$('#vAll').onclick=function(){var h=homeView();goTo(h.x,h.z,h.s);};
 $('#vZn').onclick=function(){goTo(335,-215,7);};
 $('#vDep').onclick=function(){goTo(DEP1.x,DEP1.z,6);};
 $('#vVol').onclick=function(){goTo(VOL.center.x-10,VOL.center.z-10,4,true);openFuture('voloch');};
@@ -506,15 +577,12 @@ $('#panelToggle').onclick=function(){$('#panel').classList.toggle('closed');};
 Object.keys(LAYERS).forEach(function(k){var lb=document.createElement('label');lb.innerHTML='<input type="checkbox" id="ly_'+k+'"'+(on[k]?' checked':'')+'> '+LAYERS[k][0];
   lb.querySelector('input').onchange=function(e){on[k]=e.target.checked;draw();};$('#layers').appendChild(lb);});
 function renderList(){var box=$('#stList');box.innerHTML='<h2>Станции</h2>';
-  var lists={L1:[],L2:[],L3:[]};
-  FST.filter(function(f){return f.n==='Северная';}).forEach(function(f){lists.L1.push(f);});
-  ORDER.L1.forEach(function(id){if(SBYID[id])lists.L1.push(SBYID[id]);});
-  FST.filter(function(f){return f.line==='L1'&&f.n!=='Северная';}).forEach(function(f){lists.L1.push(f);});
-  ORDER.L2.forEach(function(id){if(SBYID[id])lists.L2.push(SBYID[id]);});
-  FST.filter(function(f){return f.line==='L2';}).forEach(function(f){lists.L2.push(f);});
-  FST.filter(function(f){return f.line==='L3';}).forEach(function(f){lists.L3.push(f);});
+  // порядок по линиям: север/запад → существующие станции → продления
+  var grp=function(g,rev){return FST.filter(function(f){return f.grp===g;}).sort(function(a,b){return rev?b.ord-a.ord:a.ord-b.ord;});};
+  var ex=function(k){return ORDER[k].map(function(id){return SBYID[id];}).filter(Boolean);};
+  var lists={L1:grp('l1n',true).concat(ex('L1'),grp('l1w')),L2:grp('l2w',true).concat(ex('L2'),grp('L2e')),L3:grp('l3')};
   Object.keys(lists).forEach(function(k){var arr=lists[k].filter(function(s){return !s.plan||s.plan<=Y;});if(!arr.length)return;
-    var h=document.createElement('div');h.className='line-h';h.innerHTML=chip(k)+' '+LINES[k].name+(k==='L3'?' (резерв)':'');box.appendChild(h);
+    var h=document.createElement('div');h.className='line-h';h.innerHTML=chip(k)+' '+LINES[k].name+(k==='L3'?' (проект)':'');box.appendChild(h);
     var ul=document.createElement('div');ul.className='st-list';ul.style.setProperty('--c',LINES[k].css);
     arr.forEach(function(s){var b=document.createElement('button');b.type='button';if(s.plan)b.className='plan';
       b.innerHTML='<span>'+esc(s.n)+'</span><span class="y">'+(s.plan?'≈'+s.plan:(s.m.open||'').slice(-4))+'</span>';
@@ -522,8 +590,9 @@ function renderList(){var box=$('#stList');box.innerHTML='<h2>Станции</h2
     box.appendChild(ul);});}
 renderList();
 if(window.innerWidth<=760)$('#panel').classList.add('closed');
-window.addEventListener('resize',resize);resize();
-view.s=Math.min(Wd,Hd)/1400;view.x-=panelOff()/view.s;render();
+view.s=0;window.addEventListener('resize',resize);resize();
+document.addEventListener('visibilitychange',function(){if(!document.hidden)resize();});
+render();
 })();
 </script>
 </body>
